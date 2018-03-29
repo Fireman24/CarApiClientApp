@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.DepartureFragment">
+
+    <TextView
+        android:id="@+id/label1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Адрес" />
+
+    <TextView
+        android:id="@+id/departureAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/emptyString"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/label2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Цель" />
+    <TextView
+        android:id="@+id/departureIntent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="@string/emptyString" />
+
+    <TextView
+        android:id="@+id/label3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Дата регистрации" />
+    <TextView
+        android:id="@+id/departureStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="@string/emptyString" />
+
+    <TextView
+        android:id="@+id/label4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Комментарии" />
+    <TextView
+        android:id="@+id/departureComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="@string/emptyString" />
+
+    <TextView
+        android:id="@+id/label5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Передал" />
+    <TextView
+        android:id="@+id/departureReceiver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="@string/emptyString" />
+
+</LinearLayout>
