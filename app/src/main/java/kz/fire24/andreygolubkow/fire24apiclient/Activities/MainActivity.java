@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import kz.fire24.andreygolubkow.fire24apiclient.Adapters.ViewPagerAdapter;
 import kz.fire24.andreygolubkow.fire24apiclient.Fragments.DepartureFragment;
 import kz.fire24.andreygolubkow.fire24apiclient.Fragments.FireFragment;
 import kz.fire24.andreygolubkow.fire24apiclient.Fragments.MapFragment;
+import kz.fire24.andreygolubkow.fire24apiclient.Fragments.NoSwipeViewPager;
 import kz.fire24.andreygolubkow.fire24apiclient.Fragments.OptionsFragment;
 import kz.fire24.andreygolubkow.fire24apiclient.R;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity  {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MapFragment _mapFragment;
+    private FireFragment _fireFragment;
+    private DepartureFragment _departureFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,14 @@ public class MainActivity extends AppCompatActivity  {
         LoadSettings();
 
         setContentView(R.layout.activity_main);
+        _mapFragment = new MapFragment();
+        _fireFragment = new FireFragment();
+        _departureFragment = new DepartureFragment();
+        NoSwipeViewPager mViewPager;
+        mViewPager = (NoSwipeViewPager) findViewById(R.id.viewpager);
+        mViewPager.setSwipeable(false);
         SetupTabs();
+
 
     }
 
@@ -53,7 +64,7 @@ public class MainActivity extends AppCompatActivity  {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -65,11 +76,11 @@ public class MainActivity extends AppCompatActivity  {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        _mapFragment = new MapFragment();
+
 
         adapter.addFragment(_mapFragment, "Карта");
-        adapter.addFragment(new FireFragment(), "Пожар");
-        adapter.addFragment(new DepartureFragment(), "Выезд");
+        adapter.addFragment(_fireFragment, "Пожар");
+        adapter.addFragment(_departureFragment, "Выезд");
         //adapter.addFragment(new OptionsFragment(), "Действия");
         viewPager.setAdapter(adapter);
 
