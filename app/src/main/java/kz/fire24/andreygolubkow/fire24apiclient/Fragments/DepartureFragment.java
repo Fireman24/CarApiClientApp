@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,7 @@ public class DepartureFragment extends Fragment {
                     }
                 });
             }
-        }, 1000L, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
+        }, 0, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
     }
 
     public FiremanService getApi() {
@@ -110,6 +111,7 @@ public class DepartureFragment extends Fragment {
         _api.GetDeparture(_idCar).enqueue(new Callback<Departure>() {
             @Override
             public void onResponse(Call<Departure> call, Response<Departure> response) {
+
                 if (response.code() == 404)
                 {
                     address.setText("-");

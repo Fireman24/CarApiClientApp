@@ -13,7 +13,7 @@ public class HistoryRecord {
 
     @SerializedName("dateTime")
     @Expose
-    public DateTime DateTime;
+    public String DateTime;
 
     @SerializedName("record")
     @Expose

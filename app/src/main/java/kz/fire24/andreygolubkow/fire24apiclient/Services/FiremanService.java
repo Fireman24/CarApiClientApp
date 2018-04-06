@@ -2,6 +2,7 @@ package kz.fire24.andreygolubkow.fire24apiclient.Services;
 
 import java.util.List;
 
+import kz.fire24.andreygolubkow.fire24apiclient.Models.FireImage;
 import kz.fire24.andreygolubkow.fire24apiclient.Models.GeoobjectModel;
 import kz.fire24.andreygolubkow.fire24apiclient.Models.Departure;
 import kz.fire24.andreygolubkow.fire24apiclient.Models.Fire;
@@ -29,5 +30,8 @@ public interface FiremanService {
 
     @GET("firecarapi/{carId}/geoobjects")
     Call<List<GeoobjectModel>> GetGeoObjects(@Path("carId") String carId);
+
+    @GET("firecarapi/{carId}/images")
+    Call<List<FireImage>> GetImages(@Path("carId") String carId);
 
 }

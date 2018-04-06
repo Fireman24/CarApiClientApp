@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class FireFragment extends Fragment {
                     }
                 });
             }
-        }, 1000L, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
+        }, 0L, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
     }
 
     public FiremanService getApi() {
@@ -108,7 +109,6 @@ public class FireFragment extends Fragment {
         final TextView rank = (TextView) _view.findViewById(R.id.fireRank);
         final TextView receiver = (TextView) _view.findViewById(R.id.fireReceiver);
         final TextView startDate = (TextView) _view.findViewById(R.id.fireStartDate);
-
         _api.GetFire(_idCar).enqueue(new Callback<Fire>() {
             @Override
             public void onResponse(Call<Fire> call, Response<Fire> response) {
@@ -131,7 +131,6 @@ public class FireFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Fire> call, Throwable t) {
-
             }
         });
     }

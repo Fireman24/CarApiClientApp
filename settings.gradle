@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':yaseaLib'
+project(':yaseaLib').projectDir = new File('library')

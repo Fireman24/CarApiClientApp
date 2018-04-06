@@ -1,7 +1,17 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -11,7 +21,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -19,13 +31,39 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
     </android.support.design.widget.AppBarLayout>
 
     <kz.fire24.andreygolubkow.fire24apiclient.Fragments.NoSwipeViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
-</android.support.design.widget.CoordinatorLayout>
+        android:layout_height="306dp"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="53dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </kz.fire24.andreygolubkow.fire24apiclient.Fragments.NoSwipeViewPager>
+
+    <Button
+        android:id="@+id/goToNavigator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="0dp"
+        android:onClick="goToNavigatorClick"
+        android:text="В навигатор" />
+
+    <net.ossrs.yasea.SrsCameraView
+        android:id="@+id/glsurfaceview_camera"
+        android:layout_width="100px"
+        android:layout_height="100px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:paddingBottom="0dp"
+        android:paddingRight="0dp" />
+</RelativeLayout>

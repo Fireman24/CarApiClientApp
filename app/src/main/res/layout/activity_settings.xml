@@ -26,6 +26,15 @@
         android:text="http://api.fire24.kz/api2/"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="71dp" />
+    <EditText
+        android:id="@+id/rtmpAdressText"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="rtmp://stream-f24.daitsuna.com:1935/car/"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="71dp" />
 
     <Button
         android:id="@+id/saveSettingsButton"
