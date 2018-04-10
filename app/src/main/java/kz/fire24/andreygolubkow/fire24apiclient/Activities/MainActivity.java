@@ -7,6 +7,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,6 +54,7 @@ import kz.fire24.andreygolubkow.fire24apiclient.Models.GeoobjectModel;
 import kz.fire24.andreygolubkow.fire24apiclient.Models.GpsPoint;
 import kz.fire24.andreygolubkow.fire24apiclient.R;
 import kz.fire24.andreygolubkow.fire24apiclient.Services.FiremanService;
+import kz.fire24.andreygolubkow.fire24apiclient.Services.MyLocationListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +66,7 @@ import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.RTMP_ADDRESS
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SERVER_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SETTINGS_FILE;
 
-public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpListener,
+public class MainActivity extends AppCompatActivity implements  RtmpHandler.RtmpListener,
         SrsRecordHandler.SrsRecordListener, SrsEncodeHandler.SrsEncodeListener {
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -83,12 +86,15 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
     private GeoPoint _navTo;
     private Marker _marker;
 
+    ///Установить оптимальную точку просмотра
+    private Boolean _setOptimalViewPoint = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        MyLocationListener.SetUpLocationListener(this);
         LoadSettings();
 
         _fireFragment = new FireFragment();
@@ -178,6 +184,25 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
         }, 1000L, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
     }
 
+    private void StartSendingLocation()
+        {
+            Timer myTimer = new Timer(); // Создаем таймер
+            final Handler uiHandler = new Handler();
+
+            myTimer.schedule(new TimerTask() { // Определяем задачу
+                @Override
+                public void run() {
+
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            SendLocation();
+                        }
+                    });
+                }
+            }, 1000L, 5L * 1000); // интервал - 60000 миллисекунд, 0 миллисекунд до первого запуска.
+        }
+
     private void UpdateGeoObjects()
     {
         //Получение гео объектов
@@ -190,38 +215,40 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
 
                 ArrayList<Overlay> markers = new ArrayList<Overlay>();
 
-                for (GeoobjectModel geo : list) {
+                if (list != null) {
+                    for (GeoobjectModel geo : list) {
 
-                    Marker marker = new Marker(map);
-                    marker.setPosition(new GeoPoint(geo.gpsPoint.Lat, geo.gpsPoint.Lon));
-                    //marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-                    //TODO:Показать гидранты
-                    //Switch showHydrants = (Switch) findViewById(R.id.showHydarants);
-                    boolean showHydrants = true;
-                    if (Objects.equals(geo.marker, "hydrant") && showHydrants) {
-                        marker.setIcon(getResources().getDrawable(R.drawable.hydrant));
-                    } else if (Objects.equals(geo.marker, "fire")) {
-                        marker.setIcon(getResources().getDrawable(R.drawable.fire));
-                        _navFire = geo.gpsPoint;
+                        Marker marker = new Marker(map);
+                        marker.setPosition(new GeoPoint(geo.gpsPoint.Lat, geo.gpsPoint.Lon));
+                        //marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                        //TODO:Показать гидранты
+                        //Switch showHydrants = (Switch) findViewById(R.id.showHydarants);
+                        boolean showHydrants = true;
+                        if (Objects.equals(geo.marker, "hydrant") && showHydrants) {
+                            marker.setIcon(getResources().getDrawable(R.drawable.hydrant));
+                        } else if (Objects.equals(geo.marker, "fire")) {
+                            marker.setIcon(getResources().getDrawable(R.drawable.fire));
+                            _navFire = geo.gpsPoint;
 
-                    } else if (Objects.equals(geo.marker, "departure")) {
-                        marker.setIcon(getResources().getDrawable(R.drawable.departure));
-                    } else {
-                        continue;
-                    }
-                    marker.setTitle(geo.popupText);
-
-                    marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker, MapView mapView) {
-                            _navTo = marker.getPosition();
-
-                            marker.showInfoWindow();
-                            return true;
+                        } else if (Objects.equals(geo.marker, "departure")) {
+                            marker.setIcon(getResources().getDrawable(R.drawable.departure));
+                        } else {
+                            continue;
                         }
-                    });
+                        marker.setTitle(geo.popupText);
 
-                    markers.add(marker);
+                        marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                                _navTo = marker.getPosition();
+
+                                marker.showInfoWindow();
+                                return true;
+                            }
+                        });
+
+                        markers.add(marker);
+                    }
                 }
 
                 List<Overlay> overlays = map.getOverlays();
@@ -233,12 +260,42 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
                 }
 
                 map.getOverlays().addAll(markers);
+                if (!_setOptimalViewPoint&&MyLocationListener.imHere != null && MyLocationListener.imHere.getLatitude()!=0)
+                {
+                    map.getController().setZoom(10);
+                    map.getController().setCenter(new GeoPoint(MyLocationListener.imHere.getLatitude(),
+                            MyLocationListener.imHere.getLongitude()));
+                    _setOptimalViewPoint=true;
+                }
+
 
             }
 
             @Override
             public void onFailure(Call<List<GeoobjectModel>> call, Throwable t) {
                 //Toast.makeText(MainActivity.this, "Ошибка сети.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void SendLocation()
+    {
+        if (MyLocationListener.imHere == null)
+        {
+            return;
+        }
+        GpsPoint point = new GpsPoint();
+        point.Lon = MyLocationListener.imHere.getLongitude();
+        point.Lat = MyLocationListener.imHere.getLatitude();
+        _api.PostLocation(this._idCar, point).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
             }
         });
     }
@@ -253,8 +310,7 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        FiremanService firemanService = retrofit.create(FiremanService.class);
-        return firemanService;
+        return retrofit.create(FiremanService.class);
     }
 
     public void SetupBroadcast()
@@ -265,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
         _mPublisher.setRecordHandler(new SrsRecordHandler(this));
         _mPublisher.setPreviewResolution(640, 360);
         _mPublisher.setOutputResolution(360, 640);
+        _mPublisher.setScreenOrientation(0);
         _mPublisher.setSendVideoOnly(true);
         _mPublisher.setVideoSmoothMode();
         _mPublisher.startCamera();
@@ -398,7 +455,11 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
         if (_navTo == null) {
             Toast.makeText(MainActivity.this, "Нет координат для навигации.", Toast.LENGTH_SHORT).show();
         } else {
-            _marker.closeInfoWindow();
+            if (_marker != null)
+            {
+                _marker.closeInfoWindow();
+            }
+
             Uri uri = Uri.parse("yandexnavi://show_point_on_map?lat=" + String.valueOf(_navTo.getLatitude()) + "&lon=" + String.valueOf(_navTo.getLongitude()) + "&zoom=12&no-balloon=0");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.setPackage("ru.yandex.yandexnavi");
@@ -424,4 +485,6 @@ public class MainActivity extends AppCompatActivity implements RtmpHandler.RtmpL
     public void SwitchCamera(View view) {
         _mPublisher.switchCameraFace((_mPublisher.getCamraId()+1)% Camera.getNumberOfCameras());
     }
+
+
 }

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import kz.fire24.andreygolubkow.fire24apiclient.R;
 
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.CAR_ID;
+import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.FILESERVER_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.RTMP_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SERVER_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SETTINGS_FILE;
@@ -51,11 +52,14 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, MODE_PRIVATE);
                 EditText carId = (EditText) findViewById(R.id.idCarText);
                 EditText server = (EditText) findViewById(R.id.serverAdressText);
+                EditText fileserver = (EditText) findViewById(R.id.fileServerAddressText);
                 EditText rtmp = (EditText) findViewById(R.id.rtmpAdressText);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(CAR_ID, carId.getText().toString());
                 editor.putString(SERVER_ADDRESS, server.getText().toString());
                 editor.putString(RTMP_ADDRESS, rtmp.getText().toString());
+                editor.putString(FILESERVER_ADDRESS, fileserver.getText().toString());
+
                 editor.apply();
             }
         });

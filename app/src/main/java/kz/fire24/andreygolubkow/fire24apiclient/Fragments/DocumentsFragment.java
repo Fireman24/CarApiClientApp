@@ -35,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.CAR_ID;
+import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.FILESERVER_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SERVER_ADDRESS;
 import static kz.fire24.andreygolubkow.fire24apiclient.AppConstants.SETTINGS_FILE;
 
@@ -48,6 +49,8 @@ public class DocumentsFragment extends Fragment {
     private View _view;
     private String _idCar;
     private String _serverAddress;
+    private String _fileServerAddress;
+
     private FiremanService _api;
 
     public DocumentsFragment() {
@@ -69,6 +72,7 @@ public class DocumentsFragment extends Fragment {
         SharedPreferences settings = _mainActivity.getSharedPreferences(SETTINGS_FILE, MODE_PRIVATE);
         _idCar = settings.getString(CAR_ID, "");
         _serverAddress = settings.getString(SERVER_ADDRESS, "localhost");
+        _fileServerAddress = settings.getString(FILESERVER_ADDRESS, "localhost");
 
         _api = getDocsApi();
 
@@ -116,8 +120,8 @@ public class DocumentsFragment extends Fragment {
                         // получаем выбранный пункт
                         FireImage selectedState = (FireImage) parent.getItemAtPosition(position);
                         //-1 т. к. последним симповолом у сервера стоит слеш
-                        String sAddr = _serverAddress.substring(0, _serverAddress.length() - 1);
-                        Uri address = Uri.parse(sAddr + selectedState.Url + "/get");
+                        String sAddr = _fileServerAddress.substring(0, _serverAddress.length() - 1);
+                        Uri address = Uri.parse(sAddr + selectedState.Url);
                         Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
                         startActivity(openlinkIntent);
 

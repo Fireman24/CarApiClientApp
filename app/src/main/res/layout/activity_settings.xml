@@ -27,6 +27,15 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="71dp" />
     <EditText
+        android:id="@+id/fileServerAddressText"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="http://api.fire24.kz/"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="71dp" />
+    <EditText
         android:id="@+id/rtmpAdressText"
         android:layout_width="379dp"
         android:layout_height="wrap_content"
