@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements  RtmpHandler.Rtmp
         StartUpdateGeoObjects();
         SetupBroadcast();
         StartBroadcast();
+        StartSendingLocation();
     }
 
     private void LoadSettings()
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements  RtmpHandler.Rtmp
             @Override
             public void onResponse(Call<List<GeoobjectModel>> call, Response<List<GeoobjectModel>> response) {
                 MapView map = (MapView) _view.findViewById(R.id.mapView);
-
+                //Log.w("GEO",response.toString());
                 List<GeoobjectModel> list = response.body();
 
                 ArrayList<Overlay> markers = new ArrayList<Overlay>();
@@ -321,9 +323,8 @@ public class MainActivity extends AppCompatActivity implements  RtmpHandler.Rtmp
         _mPublisher.setRecordHandler(new SrsRecordHandler(this));
         _mPublisher.setPreviewResolution(640, 360);
         _mPublisher.setOutputResolution(360, 640);
-        _mPublisher.setScreenOrientation(0);
         _mPublisher.setSendVideoOnly(true);
-        _mPublisher.setVideoSmoothMode();
+
         _mPublisher.startCamera();
     }
 

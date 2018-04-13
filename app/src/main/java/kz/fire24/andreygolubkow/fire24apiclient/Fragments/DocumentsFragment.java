@@ -120,7 +120,7 @@ public class DocumentsFragment extends Fragment {
                         // получаем выбранный пункт
                         FireImage selectedState = (FireImage) parent.getItemAtPosition(position);
                         //-1 т. к. последним симповолом у сервера стоит слеш
-                        String sAddr = _fileServerAddress.substring(0, _serverAddress.length() - 1);
+                        String sAddr = _fileServerAddress.substring(0, _fileServerAddress.length() - 1);
                         Uri address = Uri.parse(sAddr + selectedState.Url);
                         Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
                         startActivity(openlinkIntent);
